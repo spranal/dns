@@ -1,8 +1,9 @@
 package digital.number.scanner.service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
@@ -39,7 +40,10 @@ public class DigitalNumberScannerService
      */
     public List<String> processFile(String inputFilePath) throws IOException {
         List<String> outputNumbers = new ArrayList<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(inputFilePath))) {
+        //Opens the file with explicit READ option to avoid locking the file for reading
+        try(InputStream is = Files.newInputStream(Paths.get(inputFilePath), StandardOpenOption.READ)) {
+            InputStreamReader reader = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(reader);
             String inputLine;
             List<String> numberLines = new ArrayList<>();
             while((inputLine = br.readLine()) != null) {
